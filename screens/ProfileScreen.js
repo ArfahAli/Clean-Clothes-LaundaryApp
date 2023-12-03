@@ -14,8 +14,7 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
-          <Ionicons name="ios-arrow-back" size={24} color="#C3B1E1"></Ionicons>
-          <Ionicons name="md-more" size={24} color="#C3B1E1"></Ionicons>
+          <Ionicons name="ios-arrow-back" size={24} color="#FFC0CB"></Ionicons>
         </View>
 
         <View style={{ alignSelf: "center" }}>
@@ -30,7 +29,7 @@ const ProfileScreen = ({ navigation }) => {
             <MaterialIcons
               name="chat"
               size={18}
-              color="#C3B1E1"
+              color="purple"
             ></MaterialIcons>
           </View>
           <View style={styles.active}></View>
@@ -38,7 +37,7 @@ const ProfileScreen = ({ navigation }) => {
             <Ionicons
               name="ios-add"
               size={48}
-              color="#C3B1E1"
+              color="purple"
               style={{ marginTop: 6, marginLeft: 2 }}
             ></Ionicons>
           </View>
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "HelveticaNeue",
-    color: "#722F37",
+    color: "purple",
   },
   image: {
     flex: 1,
