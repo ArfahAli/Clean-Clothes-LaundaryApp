@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
 const LoginComponent = ({ switchToRegister }) => {
-    const navigation = useNavigation(); // Initialize navigation
+  const navigation = useNavigation(); // Initialize navigation
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-
-    navigation.navigate('Home', { email, password });
+    // Assuming 'Profile' is the name of your profile screen in the navigation stack
+    navigation.navigate('Profile', { email, password });
   };
-  
-
 
   return (
     <View style={styles.container}>
@@ -22,7 +19,7 @@ const LoginComponent = ({ switchToRegister }) => {
         source={require('../assets/welcome-img.jpg')}
         style={styles.logo}
       />
-     
+
       <Text style={styles.companyName}>Login Here</Text>
 
       <TextInput
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
   loginButton: {
-    backgroundColor: '#C3B1E1',
+    backgroundColor: '#FFC0CB',
     padding: 10,
     borderRadius: 5,
     width: '80%',
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
   },
   switchText: {
     marginTop: 20,
-    color: '#722F37',
+    color: '#DC143C',
   },
   socialButtonsContainer: {
     flexDirection: 'row',
