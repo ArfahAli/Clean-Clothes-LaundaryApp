@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  
   active: {
     backgroundColor: "#34FFB9",
     position: "absolute",
