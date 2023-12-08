@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { auth } from '../Configure/firebaseConfig';
 import { createUserWithEmailAndPassword,   onAuthStateChanged} from "firebase/auth";
+import useFirestore from './useFirestore';
 const useAuth = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
