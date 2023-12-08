@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { auth } from '../Configure/firebaseConfig';
-import { createUserWithEmailAndPassword,   onAuthStateChanged} from "firebase/auth";
+import { createUserWithEmailAndPassword,onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import useFirestore from './useFirestore';
 const useAuth = () => {
     const [user, setUser] = useState(null);
@@ -28,9 +28,19 @@ const useAuth = () => {
         await setUserProfile({email, password});
     };
       
-
+    const Login =async (email, password) => {
+        await signInWithEmailAndPassword(auth, email, password);
+        const { getUserProfile } = useFirestore();
+        const user = await getUserProfile({email, password});
+        setUser(user);
+    }
    
-    return { user, signUp };
+    const signOutUser = async () => {
+        await signOut(auth);
+        setUser(null);
+        
+    };
+    return { user, signUp, Login, loading, signOutUser };
 };
 
 export default useAuth;

@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../hooks/useAuth';
 
 const LoginComponent = ({ navigation }) => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const { Login, loading, user } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const validateForm = () => {
+  let newErrors = {};
+    if (formData.email.includes(' ') || formData.email.length < 3) {
+      newErrors.email = 'Username must be at least 3 characters long with no spaces';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleLogin = async () => {
+  if(validateForm())
+  {
+    console.log('Form Data:', formData);
+    await Login(formData.email, formData.password);
+    if (user) {
+      // Assuming you have navigation prop available
+      navigation.navigate('UserNav');
+    } else {
+      // Handle unsuccessful login
+      setErrors({ email: 'Invalid credentials' });
+    }
 
-  const handleLogin = () => {
-    // Assuming 'Profile' is the name of your profile screen in the navigation stack
-    navigation.navigate('Profile', { email, password });
+    
+  }  
+  
   };
 
   return (
@@ -25,17 +47,17 @@ const LoginComponent = ({ navigation }) => {
         style={styles.input}
         placeholder="Email"
         keyboardType="email-address"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
+        onChangeText={(text) => setFormData({ ...formData, email: text })}
+        value={formData.email}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
-        value={password}
+        onChangeText={(text) => setFormData({ ...formData, password: text })}
+              value={formData.password}
       />
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+      <TouchableOpacity style={styles.loginButton} onPress={()=>handleLogin()}>
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
       <Text style={styles.switchText} onPress={() => navigation.navigate('Register')}>
@@ -52,6 +74,7 @@ const LoginComponent = ({ navigation }) => {
         <TouchableOpacity style={styles.socialButton}>
           <Image source={require('../../assets/twitter.png')} style={styles.socialIcon} />
         </TouchableOpacity>
+
       </View>
     </View>
   );
