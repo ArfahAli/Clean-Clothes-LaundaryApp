@@ -6,7 +6,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/laundry.jpg')}
+    source={require('../../assets/laundry.jpg')}
         style={styles.logo}
       />
       <Text style={styles.title}>Welcome To Laundry App</Text>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   button: {
-    backgroundColor: '#FFC0CB',
+    backgroundColor: '#DC8686',
     padding: 10,
     margin: 10,
     borderRadius: 5,
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#702963',
+    fontSize: 20,
   },
 });
 
