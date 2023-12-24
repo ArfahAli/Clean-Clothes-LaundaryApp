@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from "../screens/HomeScreen"
 import LoginScreen from '../screens/LoginScreen'; // Import your LoginScreen
 import RegisterScreen from '../screens/RegisterScreen'; // Import your RegisterScreen
-
 const Stack = createStackNavigator();
 
 const AuthNav = () => {

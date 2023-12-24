@@ -1,67 +1,90 @@
-// HomeScreen.js
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Card, Title, FAB } from 'react-native-paper';
 
 const HomeScreen = ({ navigation }) => {
+  // Function to handle service selection
+  const handleServiceSelect = (service) => {
+    console.log(`Selected Service: ${service}`);
+    // Here you can navigate to the service detail screen
+  };
+
+  // Function to handle pickup scheduling
+  const handleSchedulePickup = () => {
+    console.log('Schedule Pickup');
+    // Here you can navigate to the scheduling screen
+  };
+
   return (
-    <View style={styles.container}>
-      <Image
-    source={require('../../assets/laundry.jpg')}
-        style={styles.logo}
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.welcomeText}>Welcome back Samantha Martin</Text>
+        <View style={styles.cardContainer}>
+          <TouchableOpacity onPress={() => handleServiceSelect('Wash & Iron')}>
+            <Card style={styles.card}>
+              <Card.Cover source={require('../../assets/images/washing.png')} />
+              <Card.Title title="Wash & Iron" />
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleServiceSelect('Ironing')}>
+            <Card style={styles.card}>
+              <Card.Cover source={require('../../assets/images/iron.png')} />
+              <Card.Title title="Ironing" />
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleServiceSelect('Dry Cleaning')}>
+            <Card style={styles.card}>
+              <Card.Cover source={require('../../assets/images/dry_cleaning.jpg')} />
+              <Card.Title title="Ironing" />
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleServiceSelect('Darning')}>
+            <Card style={styles.card}>
+              <Card.Cover source={require('../../assets/images/darning.png')} />
+              <Card.Title title="Ironing" />
+            </Card>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      <FAB
+        style={styles.fab}
+        large
+        icon="plus"
+        onPress={handleSchedulePickup}
       />
-      <Text style={styles.title}>Welcome To Laundry App</Text>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Register')}
-      >
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
   },
-  image: {
-    width: 250,
-    height: 250,
-    resizeMode: 'contain',
+  scrollView: {
+    marginHorizontal: 20,
   },
-  title: {
+  welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#4CAF50',
     marginTop: 20,
-    color:'#702963',
-    marginBottom : 30
   },
-  logo: { 
-    width: 250,
-    height: 250,
-    resizeMode: 'contain',
+  cardContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
-  button: {
-    backgroundColor: '#DC8686',
-    padding: 10,
-    margin: 10,
-    borderRadius: 5,
-    width: 200,
-    alignItems: 'center',
+  card: {
+    width: '48%', // Two cards per row
+    marginBottom: 10,
   },
-  buttonText: {
-    color: '#702963',
-    fontSize: 20,
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
