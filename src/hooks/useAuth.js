@@ -22,10 +22,15 @@ const useAuth = () => {
 
 
     const signUp = async (email, password) => {
-        console.log(email, password);
-        await createUserWithEmailAndPassword(auth, email, password);
-        const { setUserProfile } = useFirestore();
-        await setUserProfile({email, password});
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            const { setUserProfile } = useFirestore();
+            await setUserProfile({ email, password });
+            return { success: true };
+        } catch (error) {
+            console.error("Error signing up: ", error.message);
+            return { success: false, message: error.message };
+        }
     };
       
     const Login =async (email, password) => {

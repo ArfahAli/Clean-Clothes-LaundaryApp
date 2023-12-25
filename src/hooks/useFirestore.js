@@ -1,12 +1,17 @@
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc,getDocs } from "firebase/firestore";
 import { firestore } from "../Configure/firebaseConfig";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 const useFirestore = () => {
 
-    const setUserProfile = async(user)=>{
-        const UserRef = doc(firestore, 'users', user.email);
-        await setDoc(UserRef, user);
-    }
+    const setUserProfile = async (user) => {
+        try {
+          const UserRef = doc(firestore, 'users', user.email);
+          await setDoc(UserRef, user);
+        } catch (error) {
+          console.error("Error setting user profile: ", error.message);
+        }
+      };
+      
 
     const getUserProfile = async(user)=>{
         const UserRef = doc(firestore, 'users', user.email);

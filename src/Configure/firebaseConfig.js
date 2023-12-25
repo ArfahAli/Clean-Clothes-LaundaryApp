@@ -11,7 +11,7 @@ const firebaseConfig = {
     messagingSenderId: "928447674400",
     appId: "1:928447674400:web:55d7b7c07cd9637aaf2445",
     measurementId: "G-VGS7BLEGGM"
-};
+  };
 
 // Initialize Firebase App
 let app;
@@ -21,11 +21,11 @@ if (!getApps().length) {
     app = getApps()[0];
 }
 
-// Initialize Firebase Auth with AsyncStorage persistence
+// Initialize Firebase Auth with AsyncStorage for persistence
 let auth;
 if (!getAuth(app)) {
     auth = initializeAuth(app, {
-        persistence: getReactNativePersistence(AsyncStorage),
+        persistence: getReactNativePersistence(AsyncStorage)
     });
 } else {
     auth = getAuth(app);

@@ -1,90 +1,123 @@
-import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Card, Title, FAB } from 'react-native-paper';
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableHighlight } from "react-native";
 
 const HomeScreen = ({ navigation }) => {
-  // Function to handle service selection
-  const handleServiceSelect = (service) => {
-    console.log(`Selected Service: ${service}`);
-    // Here you can navigate to the service detail screen
+  const [hoveredBox, setHoveredBox] = useState(null);
+
+  const handleNavigate = (screen) => {
+    navigation.navigate(screen);
   };
 
-  // Function to handle pickup scheduling
-  const handleSchedulePickup = () => {
-    console.log('Schedule Pickup');
-    // Here you can navigate to the scheduling screen
+  const boxesData = [
+    {
+      id: '1',
+      name: 'Explore Services',
+      image: require('../../assets/Services.jpg'),
+      screen: 'ServicesScreen',
+      description: 'Convenient laundry services for everyday clothes.',
+    },
+    {
+      id: '2',
+      name: 'Help Center',
+      image: require('../../assets/faqs.webp'),
+      screen: 'FAQScreen',
+      description: 'Get answers to FAQs about our services.',
+    },
+    {
+      id: '3',
+      name: 'Give Feedback',
+      image: require('../../assets/feedback_icon.png'),
+      screen: 'FeedbackScreen',
+      description: 'Share your thoughts with us.',
+    },
+    {
+      id: '4',
+      name: 'Your Profile',
+      image: require('../../assets/profile_icon.png'),
+      screen: 'ProfileScreen',
+      description: 'Manage your profile and view order history.',
+    },
+  ];
+
+  const navigateToScreen = (screen) => {
+    navigation.navigate(screen);
   };
+
+  const renderBox = ({ item }) => (
+    <TouchableHighlight
+      style={[styles.box, item.id === hoveredBox && styles.hoveredBox]}
+      onPress={() => navigateToScreen(item.screen)}
+      onHideUnderlay={() => setHoveredBox(null)}
+      onShowUnderlay={() => setHoveredBox(item.id)}
+    >
+      <>
+        <Image source={item.image} style={styles.boxImage} />
+        <Text style={styles.boxText}>{item.name}</Text>
+        <Text style={styles.Description}>{item.description}</Text>
+      </>
+    </TouchableHighlight>
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.welcomeText}>Welcome back Samantha Martin</Text>
-        <View style={styles.cardContainer}>
-          <TouchableOpacity onPress={() => handleServiceSelect('Wash & Iron')}>
-            <Card style={styles.card}>
-              <Card.Cover source={require('../../assets/images/washing.png')} />
-              <Card.Title title="Wash & Iron" />
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleServiceSelect('Ironing')}>
-            <Card style={styles.card}>
-              <Card.Cover source={require('../../assets/images/iron.png')} />
-              <Card.Title title="Ironing" />
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleServiceSelect('Dry Cleaning')}>
-            <Card style={styles.card}>
-              <Card.Cover source={require('../../assets/images/dry_cleaning.jpg')} />
-              <Card.Title title="Ironing" />
-            </Card>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleServiceSelect('Darning')}>
-            <Card style={styles.card}>
-              <Card.Cover source={require('../../assets/images/darning.png')} />
-              <Card.Title title="Ironing" />
-            </Card>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-      <FAB
-        style={styles.fab}
-        large
-        icon="plus"
-        onPress={handleSchedulePickup}
-      />
-    </SafeAreaView>
+    <View style={styles.boxContainer}>
+      <Image source={require("../../assets/back.jpg")} style={styles.coverImage} />
+      <Text style={styles.welcomeText}>Welcome to Our Laundry</Text>
+      {boxesData.map((item) => renderBox({ item }))}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollView: {
-    marginHorizontal: 20,
+  coverImage: {
+    width: "100%",
+    height: 300,
+    resizeMode: "cover",
+    marginBottom: 16,
   },
   welcomeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    marginTop: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+    color: "#333",
   },
-  cardContainer: {
+  boxContainer: {
+    width: "100%",
+  },
+  Description: {
+    fontSize: 16,
+    color: "#333",
+  },
+  boxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginTop: 20,
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 16,
   },
-  card: {
-    width: '48%', // Two cards per row
-    marginBottom: 10,
+  box: {
+    width: '45%',
+    marginBottom: 20,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor:'#BDB5D5',
   },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
+  hoveredBox: {
+    backgroundColor: '#D3D3D3', 
+  },
+  boxImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  boxText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#953553",
   },
 });
 

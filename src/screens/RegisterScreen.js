@@ -34,15 +34,18 @@ const RegisterComponent = ({ navigation }) => {
 
   const handleRegister = async () => {
     if (validateForm()) {
-      console.log('Form Data:', formData);
-      await signUp(formData.email, formData.password);
-      if(!result.success){
-        setErrors({email: result.message})
+        setLoading(true);
+        const result = await signUp(formData.email, formData.password);
+        setLoading(false);
 
-      }
-      // proceed with signup
+        if (result.success) {
+            // Navigate to another screen or show success message
+            console.log("Registration successful");
+        } else {
+            setErrors({ ...errors, email: result.message });
+        }
     }
-  }
+};
 
   return (
     <View style={styles.container}>
