@@ -53,6 +53,14 @@ const useFirestore = () => {
         console.error("Error adding pickup details: ", error.message);
       }
     };
+    const getUserPickups = async (userId) => {
+      setLoading(true);
+      const pickupsRef = collection(firestore, 'users', userId, 'pickups');
+      const querySnapshot = await getDocs(pickupsRef);
+      setLoading(false);
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  };
+    
     
 
       
