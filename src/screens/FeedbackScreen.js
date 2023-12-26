@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../Configure/firebaseConfig';
 import useFirestore from '../hooks/useFirestore';
 import useAuth from '../hooks/useAuth';
@@ -27,7 +27,7 @@ const FeedbackScreen = () => {
     try {
       await addFeedbackDetails(currentUser.uid, {
         feedback: feedback,
-        timestamp: firestore.FieldValue.serverTimestamp(),
+        timestamp: serverTimestamp(),
       });
 
       Alert.alert('Success', 'Thank you for your feedback!');

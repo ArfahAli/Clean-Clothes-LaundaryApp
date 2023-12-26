@@ -60,6 +60,17 @@ const useFirestore = () => {
       setLoading(false);
       return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   };
+
+  const addFeedbackDetails = async (userId, feedbackDetails) => {
+    try {
+      const feedbackCollectionRef = collection(firestore, 'users', userId, 'feedback');
+      await addDoc(feedbackCollectionRef, feedbackDetails);
+      console.log("Feedback details added successfully");
+    } catch (error) {
+      console.error("Error adding feedback details: ", error.message);
+      throw error;  // Throw the error so it can be handled in the component
+    }
+  };
     
     
 
