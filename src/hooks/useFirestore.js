@@ -44,16 +44,16 @@ const useFirestore = () => {
         setLoading(false);
         return querySnapshot.docs.length > 0;
     };
-
     const addPickupDetails = async (userId, pickupDetails) => {
-        try {
-          const pickupCollectionRef = collection(firestore, 'users', userId, 'pickups');
-          await addDoc(pickupCollectionRef, pickupDetails);
-          console.log("Pickup details added successfully");
-        } catch (error) {
-          console.error("Error adding pickup details: ", error.message);
-        }
-      };
+      try {
+        const pickupCollectionRef = collection(firestore, 'users', userId, 'pickups');
+        await addDoc(pickupCollectionRef, pickupDetails);
+        console.log("Pickup details added successfully");
+      } catch (error) {
+        console.error("Error adding pickup details: ", error.message);
+      }
+    };
+    
 
       
     
