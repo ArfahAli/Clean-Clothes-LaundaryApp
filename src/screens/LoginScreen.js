@@ -31,7 +31,9 @@ const LoginComponent = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/welcome-img.jpg')} style={styles.logo} />
+            <Text style={styles.appName}>Clean Clothes</Text>
+
+      <Image source={require('../../assets/display.png')} style={styles.logo} />
 
       <Text style={styles.companyName}>Login Here</Text>
 
@@ -87,6 +89,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
+  appName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#702963',
+    position: 'absolute',
+    zIndex: 1,
+    top: 15, // Adjust as needed
+    textAlign: 'center',
+    width: '100%',
+  },
   logo: {
     width: 250,
     height: 250,
@@ -103,14 +115,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
   loginButton: {
-    backgroundColor: '#DC8686',
+    backgroundColor: '#953553',
     padding: 10,
     borderRadius: 5,
     width: '80%',
     alignItems: 'center',
   },
   loginButtonText: {
-    color: '#702963',
+    color: 'white',
     fontSize: 18,
   },
    companyName: {
@@ -122,7 +134,7 @@ const styles = StyleSheet.create({
   },
   switchText: {
     marginTop: 20,
-    color: '#DC143C',
+    color: '#953553',
   },
   socialButtonsContainer: {
     flexDirection: 'row',

@@ -57,7 +57,9 @@ const RegisterComponent = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/welcome-img.jpg')} style={styles.logo} />
+                  <Text style={styles.appName}>Clean Clothes</Text>
+
+      <Image source={require('../../assets/display.png')} style={styles.logo} />
       <Text style={styles.companyName}>Create Account</Text>
 
       {errors.general && <Text style={styles.errorText}>{errors.general}</Text>}
@@ -92,13 +94,14 @@ const RegisterComponent = ({ navigation }) => {
       {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
       {/* Register Button */}
-      <TouchableOpacity style={styles.signupButton} onPress={handleRegister}>
-          {loading ? (
-            <ActivityIndicator color='white' />
-          ) : (
-            <Text style={styles.signupButtonText}>Register</Text>
-          )}
-        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.signupButton} onPress={handleRegister}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.signupButtonText}>Register</Text>
+        )}
+      </TouchableOpacity>
 
       <Text style={styles.switchText} onPress={() => navigation.navigate('Login')}>
         Already have an account? Login here.
@@ -128,6 +131,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
+  appName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#702963',
+    position: 'absolute',
+    zIndex: 1,
+    top: 15, // Adjust as needed
+    textAlign: 'center',
+    width: '100%',
+  },
   logo: {
    width: 250,
     height: 250,
@@ -144,19 +157,19 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   registerButton: {
-    backgroundColor: '#DC8686',
+    backgroundColor: '#953553',
     padding: 10,
     borderRadius: 5,
     width: '80%',
     alignItems: 'center',
   },
   registerButtonText: {
-    color: '#702963',
+    color: 'white',
     fontSize: 18,
   },
   switchText: {
     marginTop: 20,
-    color: '#722F37',
+    color: '#953553',
   },
    companyName: {
     fontSize: 24,

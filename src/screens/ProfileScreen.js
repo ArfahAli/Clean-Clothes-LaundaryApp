@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-
 import useFirestore from '../hooks/useFirestore';
 import { Button } from 'react-native-elements';
 import useAuth from "../hooks/useAuth";
@@ -59,6 +58,7 @@ const UserProfileScreen = ({ navigation }) => {
   );
 
   return (
+
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
       {currentUser && (
@@ -73,7 +73,13 @@ const UserProfileScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       /> */}
-
+      <Text style={styles.sectionTitle}>
+        {viewMode === 'pickups' ? 'Previous Pickups' : 'Your Feedbacks'}
+      </Text>
+ <View style={styles.toggleLabels}>
+        <Text style={styles.toggleLabel}>Pickups</Text>
+        <Text style={styles.toggleLabel}>Feedback</Text>
+      </View>
 <View style={styles.toggleButtons}>
   <Button
     title="Pickups"
@@ -104,20 +110,38 @@ const UserProfileScreen = ({ navigation }) => {
           renderItem={renderFeedbackItem}
         />
       )}
-      <View style={{ alignItems: 'center', marginTop: 20 }}>
-          <Button
-            title='Logout'
-            onPress={() => {
-              signOutUser();
-            }}
-          />
-        </View>
+  {/* ... Other components ... */}
+
+  <View style={styles.logoutButton}>
+    <Button
+      title='Logout'
+      onPress={signOutUser}
+      buttonStyle={styles.logoutButton}
+      titleStyle={styles.logoutButtonText}
+    />
+  </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  toggleLabels: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  toggleLabel: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+  },
   feedbackItem: {
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -231,5 +255,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: "#333",
   },
+  logoutButton: {
+    marginTop: 20,
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#953553', // Color matched with toggle buttons
+    padding: 5,
+    borderRadius: 20,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  logoutButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  
 });
 export default UserProfileScreen;
