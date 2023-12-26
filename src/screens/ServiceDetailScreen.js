@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
-
 const ServiceDetailScreen = ({ route, navigation }) => {
   const { service } = route.params;
 

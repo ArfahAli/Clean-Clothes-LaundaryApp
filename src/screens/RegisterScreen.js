@@ -1,68 +1,77 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image, ActivityIndicator } from 'react-native';
+import { AuthContext } from '../../contexts/AuthContext';
+import useFirestore from '../hooks/useFirestore';
 import useAuth from '../hooks/useAuth';
+
 const RegisterComponent = ({ navigation }) => {
- 
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
+    const { emailExists, userExsists, loading } = useFirestore();
 
-  const validateForm = () => {
+  const validateForm = async () => {
     let newErrors = {};
-
-    // Username validation
-    if (formData.username.includes(' ') || formData.username.length < 3) {
-      newErrors.username =
-        'Username must be at least 3 characters long with no spaces';
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    } else if (await emailExists(formData.email)) {
+      newErrors.email = 'Email already in use';
     }
 
-    // Email validation (basic example)
-    if (!formData.email.includes('@')) {
-      newErrors.email = 'Please enter a valid email';
+    if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+
+    if (await userExsists(formData.username)) {
+      newErrors.username = 'Username already taken';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
- 
-
   const handleRegister = async () => {
-    if (validateForm()) {
-        setLoading(true);
-        const result = await signUp(formData.email, formData.password);
-        setLoading(false);
-
-        if (result.success) {
-            // Navigate to another screen or show success message
-            console.log("Registration successful");
-        } else {
-            setErrors({ ...errors, email: result.message });
-        }
+    if (await validateForm()) {
+      // Additional user data to be saved in Firestore
+      const additionalUserData = {
+        username: formData.username,
+        email: formData.email,
+        // Any other user data fields you want to store
+      };
+      const result = await signUp(formData.email, formData.password, additionalUserData);
+  
+      if (result.success) {
+        console.log("Registration successful");
+        navigation.navigate('Login'); // Replace with your success route
+      } else {
+        setErrors({ ...errors, general: result.message });
+      }
     }
-};
+  };
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../assets/welcome-img.jpg')}
-        style={styles.logo}
-      />
+      <Image source={require('../../assets/welcome-img.jpg')} style={styles.logo} />
+      <Text style={styles.companyName}>Create Account</Text>
 
-         <Text style={styles.companyName}>Create Acount</Text>
+      {errors.general && <Text style={styles.errorText}>{errors.general}</Text>}
+
+      {/* Username Input */}
       <TextInput
         style={styles.input}
         placeholder="Username"
-        onChangeText={(text) =>
-          setFormData({ ...formData, username: text })
-        }
+        onChangeText={(text) => setFormData({ ...formData, username: text })}
         value={formData.username}
       />
+      {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+
+      {/* Email Input */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -70,18 +79,28 @@ const RegisterComponent = ({ navigation }) => {
         onChangeText={(text) => setFormData({ ...formData, email: text })}
         value={formData.email}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
+      {/* Password Input */}
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
-        onChangeText={(text) =>
-          setFormData({ ...formData, password: text })
-        }        value={formData.password}
-        />
-      <TouchableOpacity style={styles.registerButton} onPress={()=>handleRegister()}>
-        <Text style={styles.registerButtonText}>Register</Text>
-      </TouchableOpacity>
-      <Text style={styles.switchText} onPress={()=> navigation.navigate('Login')}>
+        onChangeText={(text) => setFormData({ ...formData, password: text })}
+        value={formData.password}
+      />
+      {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
+      {/* Register Button */}
+      <TouchableOpacity style={styles.signupButton} onPress={handleRegister}>
+          {loading ? (
+            <ActivityIndicator color='white' />
+          ) : (
+            <Text style={styles.signupButtonText}>Register</Text>
+          )}
+        </TouchableOpacity>
+
+      <Text style={styles.switchText} onPress={() => navigation.navigate('Login')}>
         Already have an account? Login here.
       </Text>
       

@@ -1,33 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-
+import useFirestore from '../hooks/useFirestore';
+import { AuthContext } from '../../contexts/AuthContext';
+import useAuth from '../hooks/useAuth';
+import { addDoc } from 'firebase/firestore';
 const SchedulePickupScreen = ({ route, navigation }) => {
-  const { service } = route.params;
-
-  const [pickupDate, setPickupDate] = useState('');
-  const [pickupTime, setPickupTime] = useState('');
-  const [numberOfClothes, setNumberOfClothes] = useState('');
-
-  const handleProceedToCheckout = () => {
-    // Validate pickup details (you can add your validation logic here)
-
-    // Navigate to the checkout screen
-    navigation.navigate('CheckoutScreen', {
-      service,
-      pickupDate,
-      pickupTime,
-      numberOfClothes,
-    });
-  };
+    const [serviceName, setServiceName] = useState('');
+    const [pickupDate, setPickupDate] = useState('');
+    const [pickupTime, setPickupTime] = useState('');
+    const [numberOfClothes, setNumberOfClothes] = useState('');
+    const [totalPrice, setTotalPrice] = useState(0);
+  
+    const { addPickupDetails } = useFirestore();
+    const { currentUser } = useAuth();
+  
+    const pricePerCloth = 5; // Static price per cloth
+  
+    useEffect(() => {
+      // Calculate total price whenever the number of clothes changes
+      calculateTotalPrice(numberOfClothes);
+    }, [numberOfClothes]);
+  
+    const calculateTotalPrice = (quantity) => {
+      const total = parseInt(quantity, 10) * pricePerCloth;
+      setTotalPrice(isNaN(total) ? 0 : total); // Update total price
+    };
+  
+    const validateInputs = () => {
+      return serviceName && pickupDate && pickupTime && numberOfClothes;
+    };
+  
+    const handleProceedToCheckout = async () => {
+        if (validateInputs()) {
+            if (currentUser) {
+              try {
+                await addPickupDetails(currentUser.uid, {
+                  serviceName, pickupDate, pickupTime, numberOfClothes, totalPrice
+                });
+                navigation.navigate('SuccessScreen', {
+                  serviceName,
+                  pickupDate,
+                  pickupTime,
+                  numberOfClothes,
+                  totalPrice,
+                });
+              } catch (error) {
+                console.error("Error saving pickup details: ", error);
+                // Optionally show an alert or a message to the user
+              }
+            } else {
+              // Handle the case when user is not authenticated
+              console.log('User not authenticated');
+            }
+          } else {
+            alert('Please fill in all fields correctly.');
+          }
+        };
 
   return (
-    <ImageBackground
-      source={require('../../assets/back.jpg')} 
-      style={styles.backgroundImage}
-    >
+    <ImageBackground source={require('../../assets/back.jpg')} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Schedule Pickup</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Service Name"
+            value={serviceName}
+            onChangeText={(text) => setServiceName(text)}
+          />
           <TextInput
             style={styles.input}
             placeholder="Pickup Date"
@@ -47,6 +87,7 @@ const SchedulePickupScreen = ({ route, navigation }) => {
             value={numberOfClothes}
             onChangeText={(text) => setNumberOfClothes(text)}
           />
+          <Text style={styles.totalPrice}>Total Price: ${totalPrice}</Text>
           <TouchableOpacity style={styles.proceedButton} onPress={handleProceedToCheckout}>
             <Text style={styles.proceedButtonText}>Proceed to Checkout</Text>
           </TouchableOpacity>
@@ -57,6 +98,13 @@ const SchedulePickupScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+
+    totalPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#953553',
+    marginBottom: 16,
+  },
   container: {
     flex: 1,
     padding: 16,

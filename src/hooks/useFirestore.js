@@ -1,40 +1,64 @@
-import { doc, setDoc, getDoc,getDocs } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, query, collection, where, deleteDoc } from "firebase/firestore";
 import { firestore } from "../Configure/firebaseConfig";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-const useFirestore = () => {
+import { useState } from "react";
+import { Alert } from 'react-native';
+import { addDoc } from "firebase/firestore";
 
-    const setUserProfile = async (user) => {
+const useFirestore = () => {
+    const [loading, setLoading] = useState(false);
+
+    const setUserProfile = async (userId, profileData) => {
         try {
-          const UserRef = doc(firestore, 'users', user.email);
-          await setDoc(UserRef, user);
+          const userProfileRef = doc(firestore, 'users', userId);
+          await setDoc(userProfileRef, profileData);
+          console.log("User profile set successfully");
         } catch (error) {
           console.error("Error setting user profile: ", error.message);
         }
       };
       
 
-    const getUserProfile = async(user)=>{
-        const UserRef = doc(firestore, 'users', user.email);
-        const snapshot = await getDoc(UserRef);
-        return snapshot.exists() ? snapshot.data() : null;
-
-    }
-    const emailExists = async (email) => {
-        console.log('API HIT');
-        const q = query(collection(firestore, 'users'), where('email', '==', email));
-    
-        const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.length > 0 ? true : false;
+    const getUserProfile = async (userId) => {
+        const userProfileRef = doc(firestore, 'users', userId);
+        const docSnap = await getDoc(userProfileRef);
+        return docSnap.exists() ? docSnap.data() : null;
     };
-    
+
+    const deleteUserProfile = async (userId) => {
+        const userProfileRef = doc(firestore, 'users', userId);
+        await deleteDoc(userProfileRef);
+    };
+
+    const emailExists = async (email) => {
+        setLoading(true);
+        const q = query(collection(firestore, 'users'), where('email', '==', email));
+        const querySnapshot = await getDocs(q);
+        setLoading(false);
+        return querySnapshot.docs.length > 0;
+    };
 
     const userExsists = async (username) => {
+        setLoading(true);
         const q = query(collection(firestore, 'users'), where('username', '==', username));
         const querySnapshot = await getDocs(q);
-        console.log('API HIT')
-        return querySnapshot.docs.length > 0 ? true : false;
+        setLoading(false);
+        return querySnapshot.docs.length > 0;
     };
 
-    return {setUserProfile, getUserProfile, userExsists, emailExists};
+    const addPickupDetails = async (userId, pickupDetails) => {
+        try {
+          const pickupCollectionRef = collection(firestore, 'users', userId, 'pickups');
+          await addDoc(pickupCollectionRef, pickupDetails);
+          console.log("Pickup details added successfully");
+        } catch (error) {
+          console.error("Error adding pickup details: ", error.message);
+        }
+      };
+
+      
+    
+
+    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,loading };
 };
+
 export default useFirestore;

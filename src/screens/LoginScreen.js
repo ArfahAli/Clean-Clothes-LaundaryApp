@@ -1,45 +1,37 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image, ActivityIndicator } from 'react-native';
 import useAuth from '../hooks/useAuth';
+import { Alert } from 'react-native';
 
 const LoginComponent = ({ navigation }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const { Login, loading, user } = useAuth();
+  const { Login, loading } = useAuth(); // useAuth hook
 
-const validateForm = () => {
-  let newErrors = {};
-    if (formData.email.includes(' ') || formData.email.length < 3) {
-      newErrors.email = 'Username must be at least 3 characters long with no spaces';
+  const validateForm = () => {
+    let newErrors = {};
+    if (!formData.email.includes('@') || formData.email.length < 3) {
+      newErrors.email = 'Please enter a valid email';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const handleLogin = async () => {
-  if(validateForm())
-  {
-    console.log('Form Data:', formData);
-    await Login(formData.email, formData.password);
-    if (user) {
-      // Assuming you have navigation prop available
-      navigation.navigate('UserNav');
-    } else {
-      // Handle unsuccessful login
-      setErrors({ email: 'Invalid credentials' });
-    }
 
-    
-  }  
-  
-  };
+  const handleLogin = async () => {
+    if (validateForm()) {
+        try {
+            await Login(formData.email, formData.password); // Attempt to login
+        } catch (error) {
+            console.log(error.message); // Log the error message
+            Alert.alert("Incorrect credentials"); // Display an alert with the error
+        }
+    }
+};
+
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../assets/welcome-img.jpg')}
-        style={styles.logo}
-      />
+      <Image source={require('../../assets/welcome-img.jpg')} style={styles.logo} />
 
       <Text style={styles.companyName}>Login Here</Text>
 
@@ -50,16 +42,24 @@ const validateForm = () => {
         onChangeText={(text) => setFormData({ ...formData, email: text })}
         value={formData.email}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
         onChangeText={(text) => setFormData({ ...formData, password: text })}
-              value={formData.password}
+        value={formData.password}
       />
-      <TouchableOpacity style={styles.loginButton} onPress={()=>handleLogin()}>
-        <Text style={styles.loginButtonText}>Login</Text>
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Login</Text>
+        )}
       </TouchableOpacity>
+
       <Text style={styles.switchText} onPress={() => navigation.navigate('Register')}>
         Don't have an account? Register here.
       </Text>

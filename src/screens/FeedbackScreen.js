@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { collection, addDoc } from 'firebase/firestore';
+import { firestore } from '../Configure/firebaseConfig';
+import useFirestore from '../hooks/useFirestore';
+import useAuth from '../hooks/useAuth';
 //import firestore from '@react-native-firebase/firestore'; 
 
 const FeedbackScreen = () => {
+  const { currentUser } = useAuth();
+  const { addFeedbackDetails } = useFirestore();
   const navigation = useNavigation();
   const [feedback, setFeedback] = useState('');
 
@@ -13,23 +19,25 @@ const FeedbackScreen = () => {
       return;
     }
 
+    if (!currentUser || !currentUser.uid) {
+      Alert.alert('Error', 'You must be logged in to submit feedback.');
+      return;
+    }
+
     try {
-      // Add feedback to Firebase Firestore
-      await firestore().collection('feedback').add({
+      await addFeedbackDetails(currentUser.uid, {
         feedback: feedback,
         timestamp: firestore.FieldValue.serverTimestamp(),
       });
 
       Alert.alert('Success', 'Thank you for your feedback!');
-      setFeedback(''); 
-      
+      setFeedback('');
       navigation.navigate('HomeScreen');
     } catch (error) {
       console.error('Error adding feedback to Firestore:', error);
       Alert.alert('Error', 'Failed to submit feedback. Please try again later.');
     }
   };
-
   return (
     <View style={styles.container}>
       <Image
