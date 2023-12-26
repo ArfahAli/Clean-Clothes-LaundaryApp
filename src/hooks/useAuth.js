@@ -55,14 +55,15 @@ const useAuth = () => {
     }
    
     const signOutUser = async () => {
-        try {
-          await auth().signOut();
-          console.log('User signed out!');
-        } catch (error) {
-          console.error('Error signing out: ', error);
-          // Handle error (e.g., show an error message to the user)
-        }
-      };
+      try {
+        await auth.signOut(); // Use the auth instance directly
+        console.log('User signed out!');
+      } catch (error) {
+        console.error('Error signing out: ', error);
+        // Handle error (e.g., show an error message to the user)
+      }
+    };
+    
     return { user, signUp, Login, loading, signOutUser, currentUser };
 };
 

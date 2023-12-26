@@ -71,13 +71,28 @@ const useFirestore = () => {
       throw error;  // Throw the error so it can be handled in the component
     }
   };
+
+  const getUserFeedback = async (userId) => {
+    setLoading(true);
+    const feedbackRef = collection(firestore, 'users', userId, 'feedback');
+    try {
+      const querySnapshot = await getDocs(feedbackRef);
+      setLoading(false);
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      console.error("Error fetching user feedback: ", error);
+      setLoading(false);
+      throw error;
+    }
+  };
+  
     
     
 
       
     
 
-    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,loading };
+    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading };
 };
 
 export default useFirestore;
