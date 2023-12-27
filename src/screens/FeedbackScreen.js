@@ -5,7 +5,6 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../Configure/firebaseConfig';
 import useFirestore from '../hooks/useFirestore';
 import useAuth from '../hooks/useAuth';
-//import firestore from '@react-native-firebase/firestore'; 
 
 const FeedbackScreen = () => {
   const { currentUser } = useAuth();

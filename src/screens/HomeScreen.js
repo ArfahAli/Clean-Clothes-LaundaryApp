@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableHighlight } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableHighlight, ScrollView } from "react-native";
 
 const HomeScreen = ({ navigation }) => {
   const [hoveredBox, setHoveredBox] = useState(null);
@@ -46,6 +46,7 @@ const HomeScreen = ({ navigation }) => {
   const renderBox = ({ item }) => (
     <TouchableHighlight
       style={[styles.box, item.id === hoveredBox && styles.hoveredBox]}
+      underlayColor="#E6E6FA"
       onPress={() => navigateToScreen(item.screen)}
       onHideUnderlay={() => setHoveredBox(null)}
       onShowUnderlay={() => setHoveredBox(item.id)}
@@ -59,15 +60,23 @@ const HomeScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.boxContainer}>
-      <Image source={require("../../assets/back.jpg")} style={styles.coverImage} />
-      <Text style={styles.welcomeText}>Welcome to Our Laundry</Text>
-      {boxesData.map((item) => renderBox({ item }))}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image source={require("../../assets/back.jpg")} style={styles.coverImage} />
+        <Text style={styles.welcomeText}>Welcome to Our Laundry</Text>
+        <View style={styles.boxContainer}>
+          {boxesData.map((item) => renderBox({ item }))}
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
+
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+  },
   coverImage: {
     width: "100%",
     height: 300,
@@ -79,13 +88,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "center",
-    color: "#333",
-  },
-  boxContainer: {
-    width: "100%",
-  },
-  Description: {
-    fontSize: 16,
     color: "#333",
   },
   boxContainer: {
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
     borderColor:'#BDB5D5',
   },
   hoveredBox: {
-    backgroundColor: '#D3D3D3', 
+    backgroundColor: '#E6E6FA', 
   },
   boxImage: {
     width: "100%",
@@ -119,6 +121,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "#953553",
   },
+  Description: {
+    fontSize: 16,
+    color: "#333",
+  },
 });
+
 
 export default HomeScreen;

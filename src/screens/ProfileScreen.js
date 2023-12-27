@@ -1,36 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import useFirestore from '../hooks/useFirestore';
-import { Button } from 'react-native-elements';
+import useFirestore from "../hooks/useFirestore";
+import { Button } from "react-native-elements";
 import useAuth from "../hooks/useAuth";
 const UserProfileScreen = ({ navigation }) => {
-  const [viewMode, setViewMode] = useState('pickups'); 
-  const { currentUser,signOutUser } = useAuth();
+  const [viewMode, setViewMode] = useState("pickups");
+  const { currentUser, signOutUser } = useAuth();
   const { getUserPickups } = useFirestore();
   const [previousPickups, setPreviousPickups] = useState([]);
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     getUserPickups(currentUser.uid).then(pickups => {
-  //       setPreviousPickups(pickups);
-  //     }).catch(error => {
-  //       console.error("Error fetching pickups: ", error);
-  //       // Optionally handle the error, e.g., show an alert
-  //     });
-  //   }
-  // }, [currentUser, getUserPickups]);
 
   const { getUserFeedback } = useFirestore();
   const [userFeedback, setUserFeedback] = useState([]);
 
   useEffect(() => {
     if (currentUser) {
-      if (viewMode === 'pickups') {
-        getUserPickups(currentUser.uid).then(pickups => {
+      if (viewMode === "pickups") {
+        getUserPickups(currentUser.uid).then((pickups) => {
           setPreviousPickups(pickups);
         });
-      } else if (viewMode === 'feedback') {
-        getUserFeedback(currentUser.uid).then(feedback => {
+      } else if (viewMode === "feedback") {
+        getUserFeedback(currentUser.uid).then((feedback) => {
           setUserFeedback(feedback);
         });
       }
@@ -38,27 +27,27 @@ const UserProfileScreen = ({ navigation }) => {
   }, [currentUser, viewMode, getUserPickups, getUserFeedback]);
 
   const renderItem = ({ item }) => (
-    
     <View style={styles.orderItem}>
-      
       <Text style={styles.orderService}>{item.serviceName}</Text>
       <Text style={styles.orderTotal}>Date: {item.pickupDate}</Text>
       <Text style={styles.orderTotal}>Total Price: {item.totalPrice}</Text>
       <Text style={styles.orderTotal}>Time: {item.pickupTime}</Text>
-      <Text style={styles.orderTotal}>No of Clothes: {item.numberOfClothes}</Text>
-
+      <Text style={styles.orderTotal}>
+        No of Clothes: {item.numberOfClothes}
+      </Text>
     </View>
   );
 
   const renderFeedbackItem = ({ item }) => (
     <View style={styles.feedbackItem}>
       <Text style={styles.feedbackText}>{item.feedback}</Text>
-      <Text style={styles.feedbackDate}>Date: {item.timestamp.toDate().toDateString()}</Text>
+      <Text style={styles.feedbackDate}>
+        Date: {item.timestamp.toDate().toDateString()}
+      </Text>
     </View>
   );
 
   return (
-
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
       {currentUser && (
@@ -67,38 +56,40 @@ const UserProfileScreen = ({ navigation }) => {
         </View>
       )}
 
-
-      {/* <FlatList
-        data={previousPickups}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      /> */}
       <Text style={styles.sectionTitle}>
-        {viewMode === 'pickups' ? 'Previous Pickups' : 'Your Feedbacks'}
+        {viewMode === "pickups" ? "Previous Pickups" : "Your Feedbacks"}
       </Text>
- <View style={styles.toggleLabels}>
+      <View style={styles.toggleLabels}>
         <Text style={styles.toggleLabel}>Pickups</Text>
         <Text style={styles.toggleLabel}>Feedback</Text>
       </View>
-<View style={styles.toggleButtons}>
-  <Button
-    title="Pickups"
-    onPress={() => setViewMode('pickups')}
-    buttonStyle={[styles.toggleButton, viewMode === 'pickups' ? styles.toggleButtonSelected : styles.toggleButtonUnselected]}
-    titleStyle={styles.toggleButtonText}
-  />
-  <Button
-    title="Feedback"
-    onPress={() => setViewMode('feedback')}
-    buttonStyle={[styles.toggleButton, viewMode === 'feedback' ? styles.toggleButtonSelected : styles.toggleButtonUnselected]}
-    titleStyle={styles.toggleButtonText}
-  />
-</View>
+      <View style={styles.toggleButtons}>
+        <Button
+          title="Pickups"
+          onPress={() => setViewMode("pickups")}
+          buttonStyle={[
+            styles.toggleButton,
+            viewMode === "pickups"
+              ? styles.toggleButtonSelected
+              : styles.toggleButtonUnselected,
+          ]}
+          titleStyle={styles.toggleButtonText}
+        />
+        <Button
+          title="Feedback"
+          onPress={() => setViewMode("feedback")}
+          buttonStyle={[
+            styles.toggleButton,
+            viewMode === "feedback"
+              ? styles.toggleButtonSelected
+              : styles.toggleButtonUnselected,
+          ]}
+          titleStyle={styles.toggleButtonText}
+        />
+      </View>
 
-      {viewMode === 'pickups' ? (
-        
+      {viewMode === "pickups" ? (
         <FlatList
-        
           data={previousPickups}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
@@ -110,16 +101,15 @@ const UserProfileScreen = ({ navigation }) => {
           renderItem={renderFeedbackItem}
         />
       )}
-  {/* ... Other components ... */}
 
-  <View style={styles.logoutButton}>
-    <Button
-      title='Logout'
-      onPress={signOutUser}
-      buttonStyle={styles.logoutButton}
-      titleStyle={styles.logoutButtonText}
-    />
-  </View>
+      <View style={styles.logoutButton}>
+        <Button
+          title="Logout"
+          onPress={signOutUser}
+          buttonStyle={styles.logoutButton}
+          titleStyle={styles.logoutButtonText}
+        />
+      </View>
     </View>
   );
 };
@@ -133,14 +123,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   toggleLabels: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   toggleLabel: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   feedbackItem: {
     backgroundColor: "#fff",
@@ -164,11 +154,11 @@ const styles = StyleSheet.create({
   feedbackDate: {
     fontSize: 14,
     color: "#666",
-    textAlign: 'right',
+    textAlign: "right",
   },
   toggleButtons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginVertical: 20,
   },
   toggleButton: {
@@ -178,17 +168,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   toggleButtonText: {
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   toggleButtonSelected: {
-    backgroundColor: '#953553',
+    backgroundColor: "#953553",
   },
   toggleButtonUnselected: {
-    backgroundColor: '#ccc',
-  },    
+    backgroundColor: "#ccc",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
@@ -199,9 +189,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#953553",
     marginVertical: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: -1, height: 1},
-    textShadowRadius: 10,
   },
   userInfo: {
     fontSize: 20,
@@ -211,11 +198,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#f3f3f3",
     borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: "#ccc",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
+    overflow: "hidden",
     elevation: 5,
   },
   ordersTitle: {
@@ -233,11 +216,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderWidth: 1,
     borderColor: "#ddd",
-    shadowColor: "#ccc",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   orderService: {
     fontSize: 20,
@@ -252,27 +230,22 @@ const styles = StyleSheet.create({
   },
   orderTotal: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#333",
   },
   logoutButton: {
-    marginTop: 20,
-    width: '90%',
-    alignSelf: 'center',
-    backgroundColor: '#953553', // Color matched with toggle buttons
-    padding: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    width: "80%",
+    alignSelf: "center",
+    backgroundColor: "#953553",
+    padding: 3,
     borderRadius: 20,
-    shadowColor: "#ccc",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   logoutButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
   },
-  
 });
 export default UserProfileScreen;

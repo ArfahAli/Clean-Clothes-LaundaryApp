@@ -82,7 +82,6 @@ const FAQScreen = () => {
         ))}
       </ScrollView>
 
-      {/* Additional overlay content */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -110,13 +109,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     padding: 16,
-    backgroundColor: "rgba(255,255,255, 0.7)", 
+    backgroundColor: "rgba(255,255,255, 0.7)",
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
     marginBottom: 16,
-    marginTop: 2, 
+    marginTop: 2,
     color: "black",
   },
   faqItem: {
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   faqItemExpanded: {
-    backgroundColor: "#E6E6FA", // Light background when expanded
+    backgroundColor: "#E6E6FA",
   },
   questionContainer: {
     flexDirection: "row",
@@ -152,8 +151,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: "rgba(0, 0, 0, 0.9)", 
+    justifyContent: "flex-start",
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
     borderRadius: 10,
   },
   overlayText: {

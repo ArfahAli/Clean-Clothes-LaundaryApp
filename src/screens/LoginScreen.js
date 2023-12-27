@@ -19,21 +19,20 @@ const LoginComponent = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (validateForm()) {
-        try {
-            await Login(formData.email, formData.password); // Attempt to login
-        } catch (error) {
-            console.log(error.message); // Log the error message
-            Alert.alert("Incorrect credentials"); // Display an alert with the error
-        }
+      try {
+        await Login(formData.email, formData.password); // Attempt to login
+      } catch (error) {
+        console.log(error.message); // Log the error message
+        Alert.alert('Incorrect credentials'); // Display an alert with the error
+      }
     }
-};
-
+  };
 
   return (
     <View style={styles.container}>
-            <Text style={styles.appName}>Clean Clothes</Text>
+      <Text style={styles.appName}>Clean Clothes</Text>
 
-      <Image source={require('../../assets/display.png')} style={styles.logo} />
+      <Image source={require('../../assets/back.jpg')} style={styles.logo} />
 
       <Text style={styles.companyName}>Login Here</Text>
 
@@ -68,15 +67,11 @@ const LoginComponent = ({ navigation }) => {
       <Text style={styles.switchText}>Or continue with</Text>
       <View style={styles.socialButtonsContainer}>
         <TouchableOpacity style={styles.socialButton}>
-          <Image source={require('../../assets/google.png')} style={styles.socialIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
           <Image source={require('../../assets/facebook.png')} style={styles.socialIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
           <Image source={require('../../assets/twitter.png')} style={styles.socialIcon} />
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -85,7 +80,7 @@ const LoginComponent = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start', // Align content at the top
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
@@ -93,16 +88,14 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     color: '#702963',
-    position: 'absolute',
-    zIndex: 1,
-    top: 15, // Adjust as needed
     textAlign: 'center',
     width: '100%',
+    marginBottom: 10, // Adjust as needed
   },
   logo: {
-    width: 250,
+    width: '100%', // Make the image cover the whole width
     height: 250,
-    resizeMode: 'contain',
+    resizeMode: 'cover', // Use 'cover' to maintain the aspect ratio and cover the width
     marginBottom: 20,
   },
   input: {
@@ -112,7 +105,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 10,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   loginButton: {
     backgroundColor: '#953553',
@@ -125,12 +118,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-   companyName: {
+  companyName: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
-    color:'#702963',
-    marginBottom : 30
+    color: '#702963',
+    marginBottom: 30,
   },
   switchText: {
     marginTop: 20,
