@@ -86,13 +86,49 @@ const useFirestore = () => {
     }
   };
   
-    
-    
-
+  //Admin Functions
+  const addService = async (serviceData) => {
+    try {
+      await addDoc(collection(firestore, 'services'), serviceData);
+      console.log('Service added successfully');
+    } catch (error) {
+      console.error('Error adding service: ', error);
+      throw error;
+    }
+  };
       
-    
+  const getServices = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(firestore, 'services'));
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      console.error('Error fetching services: ', error);
+      throw error;
+    }
+  };
 
-    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading };
+  const updateService = async (serviceId, serviceData) => {
+    try {
+      const serviceRef = doc(firestore, 'services', serviceId);
+      await updateDoc(serviceRef, serviceData);
+    } catch (error) {
+      console.error('Error updating service: ', error);
+      throw error;
+    }
+  };
+
+  const deleteService = async (serviceId) => {
+    try {
+      const serviceRef = doc(firestore, 'services', serviceId);
+      await deleteDoc(serviceRef);
+    } catch (error) {
+      console.error('Error deleting service: ', error);
+      throw error;
+    }
+  };
+
+
+    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading,addService, getServices, updateService, deleteService };
 };
 
 export default useFirestore;

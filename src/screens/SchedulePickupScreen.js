@@ -14,7 +14,7 @@ const SchedulePickupScreen = ({ route, navigation }) => {
     const { addPickupDetails } = useFirestore();
     const { currentUser } = useAuth();
   
-    const pricePerCloth = 5; // Static price per cloth
+    const pricePerCloth = 10; // Static price per cloth
   
     useEffect(() => {
       // Calculate total price whenever the number of clothes changes

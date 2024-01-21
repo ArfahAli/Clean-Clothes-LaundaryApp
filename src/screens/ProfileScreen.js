@@ -54,6 +54,7 @@ const UserProfileScreen = ({ navigation }) => {
         <View>
           <Text style={styles.userInfo}>Email: {currentUser.email}</Text>
         </View>
+        
       )}
 
       <Text style={styles.sectionTitle}>
