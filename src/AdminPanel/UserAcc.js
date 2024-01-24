@@ -3,11 +3,15 @@ import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView } f
 import { useNavigation } from '@react-navigation/native';
 const UserAcc = () => {
 
+  const {getUserProfile} = useFirestore();
     const navigation = useNavigation();
     return (
         <ScrollView>
         <View style={styles.container}>
             <Text style={styles.title}>User Account</Text>
+            {/* //write a code to print all users */}
+            <Text style={styles.title}>User Profile</Text>
+            
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminHomeScreen')}>
             <Text style={styles.buttonText}>Home</Text>
             </TouchableOpacity>

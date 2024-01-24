@@ -97,7 +97,7 @@ const useFirestore = () => {
     }
   };
       
-  const getServices = async () => {
+ const getServices = async () => {
     try {
       const querySnapshot = await getDocs(collection(firestore, 'services'));
       return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

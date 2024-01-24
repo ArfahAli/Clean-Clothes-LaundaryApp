@@ -1,73 +1,153 @@
-import React, { useState, useContext, useEffect } from 'react';
+// import React, { useState, useContext, useEffect } from 'react';
+// import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+// import useFirestore from '../hooks/useFirestore';
+// import { AuthContext } from '../../contexts/AuthContext';
+// import useAuth from '../hooks/useAuth';
+// import { addDoc } from 'firebase/firestore';
+// const SchedulePickupScreen = ({ route, navigation }) => {
+//      const { service } = route.params;
+//   const [pickupDate, setPickupDate] = useState('');
+//     const [pickupTime, setPickupTime] = useState('');
+//     const [numberOfClothes, setNumberOfClothes] = useState('');
+//     const [totalPrice, setTotalPrice] = useState(0);
+  
+//     const { addPickupDetails } = useFirestore();
+//     const { currentUser } = useAuth();
+//     const {name,price} = service;
+
+//     const pricePerCloth = 10; // Static price per cloth
+  
+//     useEffect(() => {
+//       // Calculate total price whenever the number of clothes changes
+//       calculateTotalPrice(numberOfClothes);
+//     }, [numberOfClothes]);
+  
+//     const calculateTotalPrice = (quantity) => {
+//       const total = parseInt(quantity, 10) * {price};
+//       setTotalPrice(isNaN(total) ? 0 : total); // Update total price
+//     };
+  
+//     const validateInputs = () => {
+//       return serviceName && pickupDate && pickupTime && numberOfClothes;
+//     };
+  
+//     const handleProceedToCheckout = async () => {
+//         if (validateInputs()) {
+//             if (currentUser) {
+//               try {
+//                 await addPickupDetails(currentUser.uid, {
+//                   serviceName, pickupDate, pickupTime, numberOfClothes, totalPrice
+//                 });
+//                 navigation.navigate('SuccessScreen', {
+//                   serviceName,
+//                   pickupDate,
+//                   pickupTime,
+//                   numberOfClothes,
+//                   totalPrice,
+//                 });
+//               } catch (error) {
+//                 console.error("Error saving pickup details: ", error);
+//                 // Optionally show an alert or a message to the user
+//               }
+//             } else {
+//               // Handle the case when user is not authenticated
+//               console.log('User not authenticated');
+//             }
+//           } else {
+//             alert('Please fill in all fields correctly.');
+//           }
+//         };
+//   return (
+//     <ImageBackground source={require('../../assets/back.jpg')} style={styles.backgroundImage}>
+//       <View style={styles.overlay}>
+//         <View style={styles.container}>
+//           <Text style={styles.title}>Schedule Pickup</Text>
+//           <Text style={styles.totalPrice}> {name}</Text>
+
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Pickup Date"
+//             value={pickupDate}
+//             onChangeText={(text) => setPickupDate(text)}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Pickup Time"
+//             value={pickupTime}
+//             onChangeText={(text) => setPickupTime(text)}
+//           />
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Number of Clothes"
+//             keyboardType="numeric"
+//             value={numberOfClothes}
+//             onChangeText={(text) => setNumberOfClothes(text)}
+//           />
+//           <Text style={styles.totalPrice}>Total Price: ${totalPrice}</Text>
+//           <TouchableOpacity style={styles.proceedButton} onPress={handleProceedToCheckout}>
+//             <Text style={styles.proceedButtonText}>Proceed to Checkout</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </ImageBackground>
+//   );
+// };
+
+
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import useFirestore from '../hooks/useFirestore';
-import { AuthContext } from '../../contexts/AuthContext';
 import useAuth from '../hooks/useAuth';
-import { addDoc } from 'firebase/firestore';
+
 const SchedulePickupScreen = ({ route, navigation }) => {
-    const [serviceName, setServiceName] = useState('');
-    const [pickupDate, setPickupDate] = useState('');
-    const [pickupTime, setPickupTime] = useState('');
-    const [numberOfClothes, setNumberOfClothes] = useState('');
-    const [totalPrice, setTotalPrice] = useState(0);
-  
-    const { addPickupDetails } = useFirestore();
-    const { currentUser } = useAuth();
-  
-    const pricePerCloth = 10; // Static price per cloth
-  
-    useEffect(() => {
-      // Calculate total price whenever the number of clothes changes
-      calculateTotalPrice(numberOfClothes);
-    }, [numberOfClothes]);
-  
-    const calculateTotalPrice = (quantity) => {
-      const total = parseInt(quantity, 10) * pricePerCloth;
+  const { service } = route.params;
+  const [pickupDate, setPickupDate] = useState('');
+  const [pickupTime, setPickupTime] = useState('');
+  const [numberOfClothes, setNumberOfClothes] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const { addPickupDetails } = useFirestore();
+  const { currentUser } = useAuth();
+  useEffect(() => {
+    if (numberOfClothes) {
+      const total = parseInt(numberOfClothes, 10) * (service.price || 0);
       setTotalPrice(isNaN(total) ? 0 : total); // Update total price
-    };
-  
-    const validateInputs = () => {
-      return serviceName && pickupDate && pickupTime && numberOfClothes;
-    };
-  
-    const handleProceedToCheckout = async () => {
-        if (validateInputs()) {
-            if (currentUser) {
-              try {
-                await addPickupDetails(currentUser.uid, {
-                  serviceName, pickupDate, pickupTime, numberOfClothes, totalPrice
-                });
-                navigation.navigate('SuccessScreen', {
-                  serviceName,
-                  pickupDate,
-                  pickupTime,
-                  numberOfClothes,
-                  totalPrice,
-                });
-              } catch (error) {
-                console.error("Error saving pickup details: ", error);
-                // Optionally show an alert or a message to the user
-              }
-            } else {
-              // Handle the case when user is not authenticated
-              console.log('User not authenticated');
-            }
-          } else {
-            alert('Please fill in all fields correctly.');
-          }
-        };
+    } else {
+      setTotalPrice(0); // Reset total price if number of clothes is empty
+    }
+  }, [numberOfClothes, service.price]);
+  const handleProceedToCheckout = async () => {
+    if (pickupDate && pickupTime && numberOfClothes && currentUser) {
+      try {
+        await addPickupDetails(currentUser.uid, {
+          serviceName: service.name,
+          pickupDate,
+          pickupTime,
+          numberOfClothes,
+          totalPrice
+        });
+        navigation.navigate('SuccessScreen', {
+          serviceName: service.name,
+          pickupDate,
+          pickupTime,
+          numberOfClothes,
+          totalPrice,
+        });
+      } catch (error) {
+        console.error("Error saving pickup details: ", error);
+      }
+    } else {
+      alert('Please fill in all fields correctly.');
+    }
+  };
 
   return (
     <ImageBackground source={require('../../assets/back.jpg')} style={styles.backgroundImage}>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Schedule Pickup</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Service Name"
-            value={serviceName}
-            onChangeText={(text) => setServiceName(text)}
-          />
+          <Text style={styles.totalPrice}>Service: {service.name}</Text>
+
           <TextInput
             style={styles.input}
             placeholder="Pickup Date"
@@ -87,6 +167,8 @@ const SchedulePickupScreen = ({ route, navigation }) => {
             value={numberOfClothes}
             onChangeText={(text) => setNumberOfClothes(text)}
           />
+          <Text style={styles.totalPrice}>Price per cloth: ${service.price}</Text>
+
           <Text style={styles.totalPrice}>Total Price: ${totalPrice}</Text>
           <TouchableOpacity style={styles.proceedButton} onPress={handleProceedToCheckout}>
             <Text style={styles.proceedButtonText}>Proceed to Checkout</Text>

@@ -1,34 +1,27 @@
-// ServicesScreen.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useFirestore from '../hooks/useFirestore'; // Ensure the path is correct
 
 const ServicesScreen = () => {
+  const [services, setServices] = useState([]);
   const navigation = useNavigation();
+  const { getServices } = useFirestore(); // Destructuring getServices from useFirestore
 
-  const servicesData = [
-    {
-      id: '1',
-      name: 'Wash and Fold',
-      description: 'Convenient and hassle-free laundry service for everyday clothes.',
-      image: require('../../assets/wash_and_fold.jpg'),
-    },
-    {
-      id: '2',
-      name: 'Dry Cleaning',
-      description: 'Specialized cleaning for delicate or dry-clean-only garments.',
-      image: require('../../assets/dry_cleaning.png'),
-    },
-    {
-      id: '3',
-      name: 'Ironing/Pressing',
-      description: 'Professional ironing and pressing services to keep your clothes crisp.',
-      image: require('../../assets/ironing_pressing.jpg'),
-    },
-  ];
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const fetchedServices = await getServices(); // Using getServices from the custom hook
+        setServices(fetchedServices);
+      } catch (error) {
+        console.error('Error fetching services: ', error);
+      }
+    };
 
+    loadServices();
+  }, [getServices]);
   const navigateToServiceDetail = (service) => {
-    navigation.navigate('ServiceDetail', { service });
+    navigation.navigate('ServiceDetail', { service }); // Passing the entire service object
   };
 
   const renderItem = ({ item }) => (
@@ -36,7 +29,7 @@ const ServicesScreen = () => {
       style={styles.serviceItem}
       onPress={() => navigateToServiceDetail(item)}
     >
-      <Image source={item.image} style={styles.serviceImage} />
+      <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
       <Text style={styles.serviceName}>{item.name}</Text>
       <Text style={styles.serviceDescription}>{item.description}</Text>
     </TouchableOpacity>
@@ -45,16 +38,14 @@ const ServicesScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Our Services</Text>
-
       <FlatList
-        data={servicesData}
+        data={services}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

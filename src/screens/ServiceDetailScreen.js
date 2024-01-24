@@ -1,62 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
+import Icon from 'react-native-vector-icons/FontAwesome';
+import useFirestore from '../hooks/useFirestore';
+
 const ServiceDetailScreen = ({ route, navigation }) => {
+  const { getServices } = useFirestore();
   const { service } = route.params;
 
-  const additionalDetails = {
-    price: '$10.00',
-    deliveryTime: '2-3 working days',
-    schedule: 'Mon - Fri, 9:00 AM - 5:00 PM',
-    specialOffer: 'Get 10% off on your first order!',
-    customerReviews: [
-      { id: '1', rating: 4.5, comment: 'Excellent service! Highly recommended.' },
-      { id: '2', rating: 5, comment: 'Quick and efficient. Will use again.' },
-    ],
-  };
 
   const handleScheduleService = () => {
-    // Implement your logic to navigate to the scheduling screen
-    // For example, if your scheduling screen is named 'SchedulePickupScreen'
     navigation.navigate('SchedulePickupScreen', { service });
   };
 
+  if (!service) {
+    return <View style={styles.container}><Text>Loading...</Text></View>;
+  }
+
+  // Assuming service has these details
+  const { imageUrl, name, description, price, deliveryTime, schedule, specialOffer } = service;
+
   return (
     <View style={styles.container}>
-      <Image source={service.image} style={styles.serviceImage} />
-      <Text style={styles.serviceName}>{service.name}</Text>
-      <Text style={styles.serviceDescription}>{service.description}</Text>
+      <Text style={styles.serviceName}>{name}</Text>
+      <Text style={styles.serviceDescription}>{description}</Text>
 
-      {/* Additional details */}
       <View style={styles.detailsContainer}>
         <Text style={styles.detailLabel}>Price:</Text>
-        <Text style={styles.detailValue}>{additionalDetails.price}</Text>
-
+        <Text style={styles.detailValue}>{price}</Text>
         <Text style={styles.detailLabel}>Delivery Time:</Text>
-        <Text style={styles.detailValue}>{additionalDetails.deliveryTime}</Text>
-
-        <Text style={styles.detailLabel}>Schedule:</Text>
-        <Text style={styles.detailValue}>{additionalDetails.schedule}</Text>
-
+        <Text style={styles.detailValue}>{deliveryTime}</Text>
+        <Text style={styles.detailLabel}>Schedule</Text>
+        <Text style={styles.detailValue}>{schedule}</Text>
         <Text style={styles.detailLabel}>Special Offer:</Text>
-        <Text style={styles.detailValue}>{additionalDetails.specialOffer}</Text>
+        <Text style={styles.detailValue}>{specialOffer}</Text>
+        {/* Repeat for other details... */}
 
-        <Text style={styles.detailLabel}>Customer Reviews:</Text>
-        {additionalDetails.customerReviews.map((review) => (
-          <View key={review.id} style={styles.reviewContainer}>
-            <Icon name="star" size={16} color="#953553" style={styles.starIcon} />
-            <Text style={styles.reviewComment}>{review.comment}</Text>
-          </View>
-        ))}
+       
       </View>
 
-      {/* Schedule service button */}
       <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleService}>
         <Text style={styles.scheduleButtonText}>Schedule Service</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

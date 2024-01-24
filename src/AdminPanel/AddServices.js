@@ -33,7 +33,7 @@ const AddServiceScreen = ({ navigation }) => {
         });
     
         if (!result.canceled) {
-            setImageUri(result.uri);
+            setImageUri(result.assets[0].uri);
             console.log("Image URI set to: ", result.uri);  // Debugging line
         }
     };        
