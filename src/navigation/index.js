@@ -7,8 +7,10 @@ const RootNavigation = () => {
   const { currentUser } = useAuth();
 
   // return currentUser ? <UserNav /> : <AuthNav />;
-  return currentUser ? <AdminNav /> : <AuthNav />;
-
+  // return currentUser ? <AdminNav /> : <AuthNav />;
+  return(
+<AdminNav />
+  )
 };
 
 export default RootNavigation;

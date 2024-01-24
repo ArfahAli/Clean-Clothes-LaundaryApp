@@ -15,44 +15,62 @@ const AddServiceScreen = ({ navigation }) => {
     const [uploading, setUploading] = useState(false);
 
     const { addService } = useFirestore();
-
     const handleChooseImage = async () => {
+        // Request permission for media library access
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+        if (permissionResult.status !== 'granted') {
+            Alert.alert('Permission Required', 'Sorry, we need camera roll permissions to make this work!');
+            return;
+        }
+    
+        // Launch Image Library
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-
+    
         if (!result.canceled) {
             setImageUri(result.uri);
+            console.log("Image URI set to: ", result.uri);  // Debugging line
         }
-    };
+    };        
 
-    const uploadImage = async () => {
-        if (!imageUri) {
+    const uploadImage = async (uri) => {
+        if (!uri) {
+            console.log('No image URI available');
             return null;
         }
-
+    
         setUploading(true);
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        const storageRef = ref(getStorage(), `services/${new Date().getTime()}`);
-        await uploadBytes(storageRef, blob);
-
-        const downloadURL = await getDownloadURL(storageRef);
-        setUploading(false);
-        return downloadURL;
+        try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const storageRef = ref(getStorage(), `services/${new Date().getTime()}`);
+            await uploadBytes(storageRef, blob);
+    
+            const downloadURL = await getDownloadURL(storageRef);
+            console.log('Image uploaded, URL:', downloadURL);
+            setUploading(false);
+            return downloadURL;
+        } catch (error) {
+            console.error('Error uploading image: ', error);
+            setUploading(false);
+            return null;
+        }
     };
+    
 
     const handleAddService = async () => {
         if (!serviceName || !serviceDescription || !servicePrice || !imageUri) {
             Alert.alert('Error', 'Please fill in all required fields.');
             return;
         }
-
+    
         try {
-            const imageUrl = await uploadImage();
+            const imageUrl = await uploadImage(imageUri); 
             await addService({
                 name: serviceName,
                 description: serviceDescription,

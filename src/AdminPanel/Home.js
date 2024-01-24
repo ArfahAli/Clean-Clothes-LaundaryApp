@@ -23,14 +23,14 @@ const AdminHomeScreen = ({ navigation }) => {
       id: '3',
       name: 'View Orders',
       image: require('../../assets/orders_icon.png'), // Replace with appropriate image
-      screen: 'OrdersScreen',
+      screen: 'ManageOrders',
       description: 'View and manage all orders.',
     },
     {
       id: '4',
       name: 'User Accounts',
       image: require('../../assets/user_accounts_icon.png'), // Replace with appropriate image
-      screen: 'UserAccountsScreen',
+      screen: 'UserAcc',
       description: 'Create, view, and manage user accounts.',
     },
   ];
@@ -39,8 +39,10 @@ const AdminHomeScreen = ({ navigation }) => {
     navigation.navigate(screen);
   };
 
+  
   const renderBox = ({ item }) => (
     <TouchableHighlight
+      key={item.id}  // Add this line
       style={[styles.box, item.id === hoveredBox && styles.hoveredBox]}
       underlayColor="#E6E6FA"
       onPress={() => navigateToScreen(item.screen)}
@@ -58,7 +60,7 @@ const AdminHomeScreen = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Image source={require("../../assets/back.jpg")} style={styles.coverImage} /> {/* Admin-specific background */}
+        <Image source={require("../../assets/back.jpg")} style={styles.coverImage} /> 
         <Text style={styles.welcomeText}>Admin Dashboard</Text>
         <View style={styles.boxContainer}>
           {boxesData.map((item) => renderBox({ item }))}
