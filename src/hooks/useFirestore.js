@@ -16,6 +16,10 @@ const useFirestore = () => {
           console.error("Error setting user profile: ", error.message);
         }
       };
+      const getAllUserProfiles = async () => {
+        const querySnapshot = await getDocs(collection(firestore, 'users'));
+        return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      };
       
 
     const getUserProfile = async (userId) => {
@@ -128,7 +132,7 @@ const useFirestore = () => {
   };
 
 
-    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading,addService, getServices, updateService, deleteService };
+    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading,addService, getServices, updateService, deleteService, getAllUserProfiles };
 };
 
 export default useFirestore;
