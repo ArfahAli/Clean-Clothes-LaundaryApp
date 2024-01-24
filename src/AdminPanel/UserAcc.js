@@ -1,94 +1,115 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import useFirestore from '../hooks/useFirestore';
-import { useNavigation } from '@react-navigation/native';
 
-const UserAcc = () => {
-  const [userProfiles, setUserProfiles] = useState([]);
-  const { getAllUserProfiles, deleteUserProfile } = useFirestore();
-  const navigation = useNavigation();
+const ManageServicesScreen = ({ navigation }) => {
+    const [services, setServices] = useState([]);
+    const { getServices, deleteService } = useFirestore();
 
-  useEffect(() => {
-    const fetchUserProfiles = async () => {
-      const profiles = await getAllUserProfiles();
-      setUserProfiles(profiles);
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const fetchedServices = await getServices();
+                setServices(fetchedServices);
+            } catch (error) {
+                console.error('Error fetching services: ', error);
+            }
+        };
+
+        fetchServices();
+    }, []);
+
+    const handleDelete = async (serviceId) => {
+        Alert.alert(
+            'Confirm Deletion',
+            'Are you sure you want to delete this service?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete', 
+                    onPress: async () => {
+                        try {
+                            await deleteService(serviceId);
+                            setServices(services.filter(service => service.id !== serviceId));
+                        } catch (error) {
+                            console.error('Error deleting service: ', error);
+                        }
+                    }
+                },
+            ]
+        );
     };
 
-    fetchUserProfiles();
-  }, []);
+    const handleEdit = (service) => {
+        navigation.navigate('EditServiceScreen', { service });
+    };
 
-  const handleDeleteUser = async (userId) => {
-    await deleteUserProfile(userId);
-    setUserProfiles(userProfiles.filter(user => user.id !== userId));
-  };
+    const renderItem = ({ item }) => (
+        <View style={styles.card}>
+            <Text style={styles.cardText}>{item.name}</Text>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(item)}>
+                    <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 
-  return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.title}>User Account</Text>
-        {userProfiles.map(user => (
-          <View key={user.id} style={styles.card}>
-            <Text style={styles.cardText}>Username: {user.username}</Text>
-            <Text style={styles.cardText}>Email: {user.email}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => handleDeleteUser(user.id)}>
-              <Text style={styles.buttonText}>Delete User</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminHomeScreen')}>
-          <Text style={styles.buttonText}>Home</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={services}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: '#F0F3F4',
-  },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#483248',
-  },
-  card: {
-    backgroundColor: 'white',
-    width: '100%',
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  cardText: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#953553',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#F0F3F4',
+    },
+    card: {
+        backgroundColor: 'white',
+        padding: 15,
+        margin: 10,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    cardText: {
+        fontSize: 16,
+        color: '#333',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 10,
+    },
+    editButton: {
+        backgroundColor: '#953553',
+        padding: 10,
+        borderRadius: 5,
+        marginRight: 10,
+    },
+    deleteButton: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    // ... Add other styles as needed
 });
 
-export default UserAcc;
+export default ManageServicesScreen;

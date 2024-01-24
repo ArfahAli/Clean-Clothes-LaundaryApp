@@ -86,12 +86,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     editButton: {
-        backgroundColor: '#FFA07A',
+        backgroundColor: '#953553',
         padding: 5,
         borderRadius: 5,
     },
     deleteButton: {
-        backgroundColor: '#FA8072',
+        backgroundColor: 'red',
         padding: 5,
         borderRadius: 5,
         marginLeft: 10,
