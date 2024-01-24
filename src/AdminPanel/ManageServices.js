@@ -41,24 +41,27 @@ const ManageServicesScreen = ({ navigation }) => {
     };
 
     const handleEdit = (service) => {
-        // Navigate to an edit screen, passing the selected service's details
         navigation.navigate('EditServiceScreen', { service });
     };
+
     const renderItem = ({ item }) => (
-        <View style={styles.serviceItem}>
-            <Text style={styles.serviceText}>{item.name}</Text>
-            {/* Include other service details as needed */}
-            <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(item.id)}>
-                <Text>Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
-                <Text>Delete</Text>
-            </TouchableOpacity>
+        <View style={styles.card}>
+            <Text style={styles.cardText}>{item.name}</Text>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.editButton} onPress={() => handleEdit(item)}>
+                    <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
     return (
         <View style={styles.container}>
+                    <Text style={styles.title}>All Services</Text>
+
             <FlatList
                 data={services}
                 renderItem={renderItem}
@@ -71,30 +74,50 @@ const ManageServicesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
         backgroundColor: '#F0F3F4',
     },
-    serviceItem: {
-        flexDirection: 'row',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#DDD',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+    card: {
+        backgroundColor: 'white',
+        padding: 15,
+        margin: 10,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 2,
     },
-    serviceText: {
+    cardText: {
         fontSize: 16,
+        color: '#333',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#483248',
+        marginLeft: 140,
+        marginTop: 20,
+      },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 10,
     },
     editButton: {
         backgroundColor: '#953553',
-        padding: 5,
+        padding: 10,
         borderRadius: 5,
+        marginRight: 10,
     },
     deleteButton: {
         backgroundColor: 'red',
-        padding: 5,
+        padding: 10,
         borderRadius: 5,
-        marginLeft: 10,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
     // ... Add other styles as needed
 });

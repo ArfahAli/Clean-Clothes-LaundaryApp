@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableHighlight, ScrollView } from "react-native";
-
+import { View, Text, Image, StyleSheet, TouchableHighlight, ScrollView, Button } from "react-native";
+import useAuth from "../hooks/useAuth";
 const AdminHomeScreen = ({ navigation }) => {
   const [hoveredBox, setHoveredBox] = useState(null);
-
+const { signOutUser } = useAuth();
   const boxesData = [
     {
       id: '1',
@@ -66,6 +66,14 @@ const AdminHomeScreen = ({ navigation }) => {
           {boxesData.map((item) => renderBox({ item }))}
         </View>
       </View>
+      <View style={styles.logoutButton}>
+        <Button
+          title="Logout"
+          onPress={signOutUser}
+          buttonStyle={styles.logoutButton}
+          titleStyle={styles.logoutButtonText}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -82,6 +90,20 @@ const styles = StyleSheet.create({
       height: 250, // Adjusted height
       resizeMode: 'cover',
       marginBottom: 20,
+    },
+    logoutButton: {
+      marginTop: 10,
+      marginBottom: 10,
+      width: "80%",
+      alignSelf: "center",
+      backgroundColor: "#953553",
+      padding: 3,
+      borderRadius: 20,
+    },
+    logoutButtonText: {
+      color: "white",
+      fontSize: 22,
+      fontWeight: "bold",
     },
     welcomeText: {
       fontSize: 28, // Slightly reduced font size

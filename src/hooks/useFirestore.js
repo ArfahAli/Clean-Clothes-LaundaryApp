@@ -64,7 +64,22 @@ const useFirestore = () => {
       setLoading(false);
       return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   };
-
+  const getAllUserPickups = async () => {
+    setLoading(true);
+    const allPickups = [];
+    const usersSnapshot = await getDocs(collection(firestore, 'users'));
+    
+    for (const userDoc of usersSnapshot.docs) {
+      const pickupsSnapshot = await getDocs(collection(firestore, 'users', userDoc.id, 'pickups'));
+      pickupsSnapshot.forEach(doc => {
+        allPickups.push({ userId: userDoc.id, ...doc.data(), id: doc.id });
+      });
+    }
+  
+    setLoading(false);
+    return allPickups;
+  };
+  
   const addFeedbackDetails = async (userId, feedbackDetails) => {
     try {
       const feedbackCollectionRef = collection(firestore, 'users', userId, 'feedback');
@@ -132,7 +147,7 @@ const useFirestore = () => {
   };
 
 
-    return { setUserProfile, getUserProfile, userExsists, emailExists, addPickupDetails, getUserPickups,addFeedbackDetails,getUserFeedback,loading,addService, getServices, updateService, deleteService, getAllUserProfiles };
+    return { setUserProfile, getUserProfile, deleteUserProfile,userExsists, emailExists, addPickupDetails, getUserPickups,getAllUserPickups, addFeedbackDetails,getUserFeedback,loading,addService, getServices, updateService, deleteService, getAllUserProfiles };
 };
 
 export default useFirestore;
