@@ -35,8 +35,7 @@ The application might include the following components:
 ## Usage
 Users can register and log in to access the laundry services. They can book services, view their order history, track current orders, and make payments online.
 
-## Contributing
-Contributions are welcome to enhance the app's functionality or design. Fork the repository and submit a pull request with your changes.
 
 ## License
 This project is licensed under the [MIT License](LICENSE.md).
+Do not take use it on your name without permissions. 
